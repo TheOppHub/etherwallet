@@ -1,11 +1,7 @@
-### [https://www.MyEtherWallet.com](https://www.MyEtherWallet.com)
+# $OHUB Wallet
 
-### [Chrome Extension](https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm)
+### Forked from MyEtherWallet, OHUB wallet is
 
-### [Download the Latest Release](https://github.com/kvhnuke/etherwallet/releases/latest)
-
-- etherwallet-vX.X.X.X.zip is the smaller package containing the gh-pages branch aka MyEtherWallet.com
-- chrome-extension-vX.X.X.X.zip is the chrome extension package
 - source code is the full source for developers to get started with (although cloning or forking the mercury branch is probably a better choice)
 
 ### Live verify files

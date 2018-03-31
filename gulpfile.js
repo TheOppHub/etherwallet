@@ -28,17 +28,17 @@ const dist_CX      = './chrome-extension/';
 
 
 // Error / Success Handling
-let onError = function(err) {
+let onError = (err) => {
     notify.onError({
         title: "Error: " + err.plugin,
         subtitle: "<%= file.relative %>",
         message: "<%= error.message %>",
         sound: "Beep",
         icon: app + "images/icons/icon48.png",
-    })(err);
-    console.log(err.toString());
-    this.emit('end');
-};
+    })(err)
+    console.log(err.toString())
+    this.emit('end')
+}
 
 function onSuccess(msg) {
     return {
@@ -57,8 +57,8 @@ function notifyFunc(msg) {
 
 
 // HTML / TPL Pages
-let htmlFiles = app + 'layouts/*.html';
-let tplFiles = app + 'includes/*.tpl';
+let htmlFiles = app + 'layouts/*.html'
+let tplFiles = app + 'includes/*.tpl'
 
 gulp.task('html', function(done) {
     return gulp.src(htmlFiles)
@@ -67,7 +67,7 @@ gulp.task('html', function(done) {
         .pipe(gulp.dest(dist))
         .pipe(gulp.dest(dist_CX))
         .pipe(notify(onSuccess('HTML')))
-});
+})
 
 
 
@@ -92,7 +92,7 @@ gulp.task('styles', function() {
         .pipe(gulp.dest(less_destFolder))
         .pipe(gulp.dest(less_destFolder_CX))
         .pipe(notify(onSuccess('Styles')))
-});
+})
 
 
 // js: Browserify
@@ -106,7 +106,7 @@ let babelOpts = {
     presets: ['es2015'],
     compact: false,
     global: true
-};
+}
 
 function bundle_js(bundler) {
     return bundler.bundle()
@@ -134,17 +134,17 @@ function bundle_js_debug(bundler) {
 gulp.task('js', function() {
     let bundler = browserify(js_srcFile).transform(babelify).transform(html2js);
     bundle_js(bundler)
-});
+})
 
 gulp.task('js-production', function() {
     let bundler = browserify(js_srcFile).transform(babelify, babelOpts).transform(html2js);
     bundle_js(bundler)
-});
+})
 
 gulp.task('js-debug', function() {
     let bundler = browserify(js_srcFile, browseOpts).transform(babelify, babelOpts).transform(html2js);
     bundle_js_debug(bundler)
-});
+})
 
 
 
@@ -160,38 +160,38 @@ gulp.task('staticJS', function() {
         .pipe(uglify())
         .pipe(gulp.dest(js_destFolderStatic))
         .pipe(notify(onSuccess('StaticJS')))
-});
+})
 
 
 
 // Copy
-let imgSrcFolder = app + 'images/**/*';
-let fontSrcFolder = app + 'fonts/*.*';
-let cxSrcFiles = app + 'includes/browser_action/*.*';
-let cxBackgroundFile = app + 'includes/background/*.*';
-let jsonFile = app + '*.json';
-let jQueryFile = app + 'scripts/staticJS/jquery-1.12.3.min.js';
-let bin = app + '/bin/*';
-let staticJSSrcFile = js_destFolderStatic + js_destFileStatic;
-let readMe = './README.md';
+let imgSrcFolder = app + 'images/**/*'
+let fontSrcFolder = app + 'fonts/*.*'
+let cxSrcFiles = app + 'includes/browser_action/*.*'
+let cxBackgroundFile = app + 'includes/background/*.*'
+let jsonFile = app + '*.json'
+let jQueryFile = app + 'scripts/staticJS/jquery-1.12.3.min.js'
+let bin = app + '/bin/*'
+let staticJSSrcFile = js_destFolderStatic + js_destFileStatic
+let readMe = './README.md'
 
 
-gulp.task('copy', ['staticJS'], function() {
+gulp.task('copy', ['staticJS'], () => {
     gulp.src(imgSrcFolder)
         .pipe(gulp.dest(dist + 'images'))
-        .pipe(gulp.dest(dist_CX + 'images'));
+        .pipe(gulp.dest(dist_CX + 'images'))
 
     gulp.src(fontSrcFolder)
         .pipe(gulp.dest(dist + 'fonts'))
-        .pipe(gulp.dest(dist_CX + 'fonts'));
+        .pipe(gulp.dest(dist_CX + 'fonts'))
 
     gulp.src(staticJSSrcFile)
         .pipe(gulp.dest(dist + 'js'))
-        .pipe(gulp.dest(dist_CX + 'js'));
+        .pipe(gulp.dest(dist_CX + 'js'))
 
     gulp.src(jQueryFile)
         .pipe(gulp.dest(dist + 'js'))
-        .pipe(gulp.dest(dist_CX + 'js'));
+        .pipe(gulp.dest(dist_CX + 'js'))
 
     gulp.src(jsonFile)
         .pipe(gulp.dest(dist))
@@ -204,7 +204,7 @@ gulp.task('copy', ['staticJS'], function() {
         .pipe(gulp.dest(dist_CX + 'background'))
 
     gulp.src(bin)
-        .pipe(gulp.dest(dist + 'bin'));
+        .pipe(gulp.dest(dist + 'bin'))
 
     return gulp.src(cxSrcFiles)
         .pipe(gulp.dest(dist_CX + 'browser_action'))
@@ -230,7 +230,7 @@ gulp.task('clean', function() {
         .pipe(plumber({ errorHandler: onError }))
         .pipe(clean())
         .pipe(notify(onSuccess(' Clean ')))
-});
+})
 
 
 
@@ -253,7 +253,7 @@ gulp.task('getVersion', function() {
     versionMsg = 'Release: ' + versionNum
         //return gulp.src( './' )
         //.pipe( notify ( onSuccess('Version Number ' + versionNum ) ))
-});
+})
 
 
 // zips dist folder
@@ -271,7 +271,7 @@ gulp.task('zip', ['getVersion'], function() {
         .pipe(zip('./chrome-extension-' + versionNum + '.zip'))
         .pipe(gulp.dest('./releases/'))
         .pipe(notify(onSuccess('Zip CX ' + versionNum)))
-});
+})
 
 
 function archive() {
@@ -322,7 +322,7 @@ gulp.task('travisZip', ['getVersion'], function() {
         .pipe(zip('./chrome-extension-' + versionNum + '.zip'))
         .pipe(gulp.dest('./deploy/'))
         .pipe(notify(onSuccess('Zip CX ' + versionNum)))
-});
+})
 
 
 // add all
@@ -332,7 +332,7 @@ gulp.task('add', function() {
             'git add -A'
         ]))
         //.pipe( notify ( onSuccess('Git Add' ) ))
-});
+})
 
 // commit with current v# in manifest
 gulp.task('commit', ['getVersion'], function() {
@@ -341,7 +341,7 @@ gulp.task('commit', ['getVersion'], function() {
             'git commit -m "Rebuilt and cleaned everything. Done for now."'
         ]))
         .pipe(notify(onSuccess('Commit')))
-});
+})
 
 // commit with current v# in manifest
 gulp.task('commitV', ['getVersion'], function() {
@@ -350,7 +350,7 @@ gulp.task('commitV', ['getVersion'], function() {
             'git commit -m " ' + versionMsg + ' "'
         ]))
         .pipe(notify(onSuccess('Commit w ' + versionMsg)))
-});
+})
 
 // tag with current v# in manifest
 gulp.task('tag', ['getVersion'], function() {
@@ -359,7 +359,7 @@ gulp.task('tag', ['getVersion'], function() {
             'git tag -a ' + versionNum + ' -m " ' + versionMsg + '"'
         ]))
         .pipe(notify(onSuccess('Tagged Commit' + versionMsg)))
-});
+})
 
 // Push Release to Mercury
 gulp.task('push', ['getVersion'], function() {
@@ -368,7 +368,7 @@ gulp.task('push', ['getVersion'], function() {
             'git push origin mercury ' + versionNum
         ]))
         .pipe(notify(onSuccess('Push')))
-});
+})
 
 // Push Live
 // Pushes dist folder to gh-pages branch
@@ -378,7 +378,7 @@ gulp.task('pushlive', ['getVersion'], function() {
             'git subtree push --prefix dist origin gh-pages'
         ]))
         .pipe(notify(onSuccess('Push Live')))
-});
+})
 
 // Prep & Release
 // gulp prep
@@ -396,19 +396,19 @@ gulp.task('watchTPL',     function() { gulp.watch(tplFiles,         ['html']    
 gulp.task('watchCX',      function() { gulp.watch(cxSrcFiles,       ['copy']          ) })
 gulp.task('watchCXbackground', function() { gulp.watch(cxBackgroundFile,['copy']      ) })
 
-gulp.task('bump',          function() { return bumpFunc( 'patch' ) });
-gulp.task('bump-patch',    function() { return bumpFunc( 'patch' ) });
-gulp.task('bump-minor',    function() { return bumpFunc( 'minor' ) });
+gulp.task('bump',          function() { return bumpFunc( 'patch' ) })
+gulp.task('bump-patch',    function() { return bumpFunc( 'patch' ) })
+gulp.task('bump-minor',    function() { return bumpFunc( 'minor' ) })
 
-gulp.task('archive',       function() { return archive() });
+gulp.task('archive',       function() { return archive() })
 
-gulp.task('prep',   function(cb) { runSequence('js-production', 'html', 'styles', 'copy', cb); });
+gulp.task('prep',   function(cb) { runSequence('js-production', 'html', 'styles', 'copy', cb); })
 
-gulp.task('bump',   function(cb) { runSequence('bump-patch', 'clean', 'zip', cb);              });
+gulp.task('bump',   function(cb) { runSequence('bump-patch', 'clean', 'zip', cb);              })
 
-gulp.task('zipit',  function(cb) { runSequence('clean', 'zip', cb);                            });
+gulp.task('zipit',  function(cb) { runSequence('clean', 'zip', cb);                            })
 
-gulp.task('commit', function(cb) { runSequence('add', 'commitV', 'tag', cb);                   });
+gulp.task('commit', function(cb) { runSequence('add', 'commitV', 'tag', cb);                   })
 
 gulp.task('watch',     ['watchJS',     'watchLess', 'watchPAGES', 'watchTPL', 'watchCX', 'watchCXbackground'])
 gulp.task('watchProd', ['watchJSProd', 'watchLess', 'watchPAGES', 'watchTPL', 'watchCX', 'watchCXbackground'])
